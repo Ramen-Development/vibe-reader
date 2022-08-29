@@ -1,0 +1,33 @@
+{
+  "name": "noodlebot",
+  "version": "1.0.0",
+  "description": "Simple chatbot that detects emotions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx tailwindcss -i public/css/tailwind.css -o public/css/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ramen-Development/noodlebot.git"
+  },
+  "keywords": [
+    "chatbot"
+  ],
+  "author": "Ramen Development",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ramen-Development/noodlebot/issues"
+  },
+  "homepage": "https://github.com/Ramen-Development/noodlebot#readme",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.2",
+    "tailwindcss": "^3.1.8"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^3.20.0",
+    "@tensorflow/tfjs-node": "^3.20.0",
+    "autoprefixer": "^10.4.8",
+    "express": "^4.18.1"
+  }
+}
