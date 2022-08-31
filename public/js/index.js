@@ -1,32 +1,50 @@
 const emotions = [
-    "admiration",
-    "amusement",
-    "anger",
-    "annoyance",
-    "approval",
-    "caring",
-    "confusion",
-    "curiosity",
-    "desire",
-    "disappointment",
-    "disapproval",
-    "disgust",
-    "embarrassment",
-    "excitement",
-    "fear",
-    "gratitude",
-    "grief",
-    "joy",
-    "love",
-    "nervousness",
-    "optimism",
-    "pride",
-    "realization",
-    "relief",
-    "remorse",
-    "sadness",
-    "surprise",
-    "neutral",
+    "Admiration",
+    "Amusement",
+    "Anger",
+    "Annoyance",
+    "Approval",
+    "Caring",
+    "Confusion",
+    "Curiosity",
+    "Desire",
+    "Disappointment",
+    "Disapproval",
+    "Disgust",
+    "Embarrassment",
+    "Excitement",
+    "Fear",
+    "Gratitude",
+    "Grief",
+    "Joy",
+    "Love",
+    "Nervousness",
+    "Optimism",
+    "Pride",
+    "Realization",
+    "Relief",
+    "Remorse",
+    "Sadness",
+    "Surprise",
+    "Neutral",
+  ];
+
+  const questionsNumber = 8;
+
+  let emotionsResults = new Array(28).fill(0);
+
+  let usedQuestions = new Array(questionsNumber).fill(0);
+
+  
+  const questions = [
+    "What you do when you feel happy?",
+    "What do you do when you are alone?",
+    "What is your purpose in life?",
+    "What you do when you are sad?",
+    "What do you do when you are angry?",
+    "What do you do when you are scared?",
+    "Tell me a short story about yourself.",
+    "Do you have a trauma story?",
   ];
   
   let allWords = [];
@@ -167,16 +185,60 @@ const emotions = [
     let prediction = await model.predict(tf.stack([tf.tensor1d(vector)])).data();
     // Get the index of the highest value in the prediction
     let id = prediction.indexOf(Math.max(...prediction));
-    botMsg(`Result: ${emotions[id]}`);
+    emotionsResults[id] = emotionsResults[id]+1;
+    console.log(emotions[id]);
+    
   }
 
+  let neededmsgs=0;
   function userMsg() {
     let msgInput = document.getElementById("message");
     let msg = msgInput.value;
     msgInput.value = "";
-    document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-gray-600 text-black">'+msg+'</span></div></div>';
+    document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-gray-600 text-white">'+msg+'</span></div></div>';
     evaluate(msg);
+    neededmsgs++;
+    
+    if(neededmsgs == 3)
+    {
+      document.getElementById("chat").innerHTML += "<br>";
+      //Results
+      for(let i=0;i<emotionsResults.length;i++)
+      {
+        if(emotionsResults[i] > 0)
+        {
+          showResult(emotions[i],emotionsResults[i].toString());
+        }
+      }
+      //Borrar boton
+      let interaction = document.getElementById("interact");
+      interaction.remove();
+    }
+    else
+    {
+      let iaux = 0;
+      while(iaux == 0)
+      {
+        let aux = Math.floor(Math.random() * questionsNumber);
+        if(usedQuestions[aux] == 0)
+        {
+          botMsg(questions[aux]);
+          usedQuestions[aux]++;
+          iaux=1;
+        }
+      }
+    }
+
   }
   function botMsg(msg) {
     document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center"><span class="flex p-2 rounded-lg bg-gray-600 text-white">'+msg+'</span></div></div>';
   }
+
+  function showResult(msg,val) {
+    document.getElementById("chat").innerHTML += '<label for="'+ msg +'">'+msg+':  </label>';
+    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="10" class="rounded-r-md bg-gray-600">'+val+'/10 </progress>';
+  }
+  
+  let aux = Math.floor(Math.random() * questionsNumber);
+  usedQuestions[aux] = 1;
+  botMsg(questions[aux]);
