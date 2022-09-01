@@ -29,7 +29,7 @@ const emotions = [
     "Neutral",
   ];
 
-  const questionsNumber = 8;
+  const questionsNumber = 40;
 
   let emotionsResults = new Array(28).fill(0);
 
@@ -45,6 +45,38 @@ const emotions = [
     "What do you do when you are scared?",
     "Tell me a short story about yourself.",
     "Do you have a trauma story?",
+    "Do you feel good?",
+    "Do you feel bad?",
+    "How is your relationship with your family?",
+    "What do you do for a living?",
+    "Tell me and achievement you got",
+    "What is your favorite animal?",
+    "Tell me a secret about you",
+    "What type of music do you listen?",
+    "How was your last relationship?",
+    "What do you do before sleeping?",
+    "Who is your hero?",
+    "If you could live anywhere, where would it be?",
+    "What is your biggest fear?",
+    "What is your favorite family vacation?",
+    "What would you change about yourself if you could?",
+    "What really makes you angry?",
+    "What motivates you to work hard?",
+    "What is your favorite thing about your career?",
+    "What is your biggest complaint about your job?",
+    "What is your proudest accomplishment?",
+    "What is your child's proudest accomplishment?",
+    "What is your favorite book to read?",
+    "What makes you laugh the most?",
+    "What was the last movie you went to? What did you think?",
+    "What did you want to be when you were small?",
+    "What does your child want to be when he/she grows up?",
+    "What two radio stations do you listen to in the car the most?",
+    "Which would you rather do: wash dishes, mow the lawn, clean the bathroom, or vacuum the house?",
+    "If you could hire someone to help you, would it be with cleaning, cooking, or yard work?",
+    "If you could only eat one meal for the rest of your life, what would it be?",
+    "Who is your favorite author?",
+
   ];
   
   let allWords = [];
@@ -199,7 +231,7 @@ const emotions = [
     evaluate(msg);
     neededmsgs++;
     
-    if(neededmsgs == 3)
+    if(neededmsgs == 10)
     {
       document.getElementById("chat").innerHTML += "<br>";
       //Results
@@ -236,7 +268,7 @@ const emotions = [
 
   function showResult(msg,val) {
     document.getElementById("chat").innerHTML += '<label for="'+ msg +'">'+msg+':  </label>';
-    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="10" class="rounded-r-md bg-gray-600">'+val+'/10 </progress>';
+    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="10">'+val+'/10 </progress>';
   }
   
   let aux = Math.floor(Math.random() * questionsNumber);
