@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
 const router = express.Router();
-const port = 3000;
+const port = 8080;
 
 app.use(express.static("public"));
 
