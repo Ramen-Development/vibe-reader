@@ -2,10 +2,9 @@
   "name": "noodlebot",
   "version": "1.1.0",
   "description": "Simple chatbot that detects emotions",
-  "main": "app.js",
-  "type": "module",
   "scripts": {
     "start": "node app.js",
+    "debug": "node --inspect=${DEBUG_PORT} app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:css": "npx tailwindcss -i public/css/tailwind.css -o public/css/style.css"
   },
@@ -27,6 +26,9 @@
     "tailwindcss": "^3.1.8"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "pino": "^8.5.0",
+    "pino-http": "^8.2.0",
+    "prom-client": "^14.1.0"
   }
 }
