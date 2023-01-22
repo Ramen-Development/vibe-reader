@@ -1,4 +1,4 @@
-const emotions = [
+const emotions_en = [
     "Admiration",
     "Amusement",
     "Anger",
@@ -29,14 +29,38 @@ const emotions = [
     "Neutral",
   ];
 
-  const questionsNumber = 40;
-
-  let emotionsResults = new Array(28).fill(0);
-
-  let usedQuestions = new Array(questionsNumber).fill(0);
-
-  
-  const questions = [
+  const emotions = [
+    "Admiracion",
+    "Asombro",
+    "Enojo",
+    "Molestia",
+    "Aprovacion",
+    "Cariño",
+    "Confusion",
+    "Curiosidad",
+    "Deseo",
+    "Decepcion",
+    "Desaprobacion",
+    "Disgusto",
+    "Pena",
+    "Emocion",
+    "Miedo",
+    "Gratitud",
+    "Duelo",
+    "Alegria",
+    "Amor",
+    "Nervios",
+    "Optimismo",
+    "Orgullo",
+    "Realizacion",
+    "Alivio",
+    "Remordimiento",
+    "Tristeza",
+    "Sorpresa",
+    "Neutral",
+  ];
+ 
+  const questions_en = [
     "What you do when you feel happy?",
     "What do you do when you are alone?",
     "What is your purpose in life?",
@@ -49,7 +73,7 @@ const emotions = [
     "Do you feel bad?",
     "How is your relationship with your family?",
     "What do you do for a living?",
-    "Tell me and achievement you got",
+    "Tell me an achievement you got",
     "What is your favorite animal?",
     "Tell me a secret about you",
     "What type of music do you listen?",
@@ -65,20 +89,54 @@ const emotions = [
     "What is your favorite thing about your career?",
     "What is your biggest complaint about your job?",
     "What is your proudest accomplishment?",
-    "What is your child's proudest accomplishment?",
     "What is your favorite book to read?",
     "What makes you laugh the most?",
     "What was the last movie you went to? What did you think?",
     "What did you want to be when you were small?",
-    "What does your child want to be when he/she grows up?",
-    "What two radio stations do you listen to in the car the most?",
-    "Which would you rather do: wash dishes, mow the lawn, clean the bathroom, or vacuum the house?",
-    "If you could hire someone to help you, would it be with cleaning, cooking, or yard work?",
-    "If you could only eat one meal for the rest of your life, what would it be?",
-    "Who is your favorite author?",
 
   ];
   
+  const questions = [
+    "¿Que haces cuando te sientes feliz?",
+    "¿Que haces cuando estas solo?",
+    "¿Cual es tu proposito en la vida?",
+    "¿Que haces cuando estas triste?",
+    "¿Que haces cuando estas enojado?",
+    "¿Que haces cuando estas asustado?",
+    "Cuentame un corto anecdota sobre ti",
+    "¿Tienes algun trauma?",
+    "Cuentame como te sientes",
+    "¿Como es tu relacion con tu familia?",
+    "¿A que te dedicas?",
+    "Cuentame un logro tuyo",
+    "¿Cual es tu animal favorito y porque?",
+    "Cuentame un secreto tuyo",
+    "¿Que tipo de musica escuchas?, ¿Como te hace sentir?",
+    "¿Como fue tu ultima relacion?",
+    "¿Que haces antes de dormir?",
+    "¿Quien es tu heroe y porque?",
+    "¿Si pudieras vivir donde sea, donde seria y porque?",
+    "¿Cual es tu mayor miedo?",
+    "¿Cuales han sido tus vacaciones favoritas y porque?",
+    "¿Que cambiarias sobre ti si pudieras?",
+    "¿Que te hace enojar realmente?",
+    "¿Que te motiva a trabajar?",
+    "¿Cual es tu parte favorita de tu carrera?",
+    "¿Que es lo que menos te gusta de tu trabajo?",
+    "¿Cual es el logro del que mas te enorgulleces?",
+    "¿Como te hace sentir tu libro favorito?",
+    "¿Que es lo que mas te hace reir?",
+    "¿Como te hizo sentir la ultima pelicula que viste?",
+    "¿Que querias ser cuando fueras grande y porque?",
+
+  ];
+
+  const questionsNumber = questions.length;
+
+  let emotionsResults = new Array(28).fill(0);
+
+  let usedQuestions = new Array(questionsNumber).fill(0);
+
   let allWords = [];
   let wordReference = {};
   const model = tf.sequential();
@@ -97,7 +155,7 @@ const emotions = [
     document.getElementById("message").disabled = true;
     document.getElementById("sendbtn").disabled = true;
     // Load GoEmotions data (https://github.com/google-research/google-research/tree/master/goemotions)
-    let data = await fetch( "../data/emotions.tsv" ).then( r => r.text() );
+    let data = await fetch( "data/emotions_es.tsv" ).then( r => r.text() );
     let lines = data.split("\n").filter((x) => !!x); // Split & remove empty lines
   
     // Randomize the lines
@@ -188,7 +246,7 @@ const emotions = [
       shuffle: true,
       callbacks: {
         onEpochEnd: (epoch, logs) => {
-          setText(`Training... Epoch #${epoch} (${logs.acc})`);
+          setText(`Entrenando... Epoch #${epoch} (${logs.acc})`);
           console.log("Epoch #", epoch, logs);
         },
       },
