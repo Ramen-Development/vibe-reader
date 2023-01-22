@@ -162,7 +162,7 @@ const emotions_en = [
     shuffleArray(lines);
   
     // Process 200 lines to generate a "bag of words"
-    const numSamples = 5427;
+    const numSamples = 1000;
     let bagOfWords = {};
     let sentences = lines.slice(0, numSamples).map((line) => {
       let sentence = line.split("\t")[0];
