@@ -34,7 +34,7 @@ const emotions_en = [
     "Asombro",
     "Enojo",
     "Molestia",
-    "Aprovacion",
+    "Aprobacion",
     "Cariño",
     "Confusion",
     "Curiosidad",
@@ -162,7 +162,7 @@ const emotions_en = [
     shuffleArray(lines);
   
     // Process 200 lines to generate a "bag of words"
-    const numSamples = 1000;
+    const numSamples = 500;
     let bagOfWords = {};
     let sentences = lines.slice(0, numSamples).map((line) => {
       let sentence = line.split("\t")[0];
@@ -242,7 +242,7 @@ const emotions_en = [
     const xs = tf.stack(vectors.map((x) => tf.tensor1d(x)));
     const ys = tf.stack(outputs.map((x) => tf.tensor1d(x)));
     await model.fit(xs, ys, {
-      epochs: 50,
+      epochs: 100,
       shuffle: true,
       callbacks: {
         onEpochEnd: (epoch, logs) => {
