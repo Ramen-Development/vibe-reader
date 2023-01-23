@@ -34,7 +34,7 @@ const emotions_en = [
     "Asombro",
     "Enojo",
     "Molestia",
-    "Aprovacion",
+    "Aprobacion",
     "Cariño",
     "Confusion",
     "Curiosidad",
