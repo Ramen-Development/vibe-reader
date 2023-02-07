@@ -286,12 +286,10 @@ const emotions_en = [
     let msgInput = document.getElementById("message");
     let msg = msgInput.value;
     if(msg == "") return;
+    evaluate(msg);
     msgInput.value = "";
     document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-sky-300 text-white">'+msg+'</span></div></div>';
     neededmsgs++;
-
-    iterator = -1;
-    document.getElementById("botface").innerHTML = '<img class="mx-auto w-auto" id="botface" src="images/BOT-3.png" alt="Workflow"/>';
     
     if(neededmsgs == 10)
     {
@@ -329,12 +327,14 @@ const emotions_en = [
 
   function botMsg(msg) {
     document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center"><span class="flex p-2 rounded-lg bg-sky-500 text-white">'+msg+'</span></div></div>';
-   
+    iterator = -1;
+    document.getElementById("botface").innerHTML = '<img class="mx-auto w-auto" id="botface" src="images/BOT-3.png" alt="Workflow"/>';
+    
   }
 
   function showResult(msg,val) {
     document.getElementById("chat").innerHTML += '<label for="'+ msg +'">'+msg+':  </label>';
-    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="10">'+val+'/9 </progress>';
+    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="9">'+val+'/10 </progress>';
   }
   
   let aux = Math.floor(Math.random() * questionsNumber);
