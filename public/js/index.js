@@ -277,6 +277,7 @@ const emotions_en = [
     let id = prediction.indexOf(Math.max(...prediction));
     emotionsResults[id] = emotionsResults[id]+1;
     console.log(emotions[id]);
+
     
   }
 
@@ -284,10 +285,13 @@ const emotions_en = [
   function userMsg() {
     let msgInput = document.getElementById("message");
     let msg = msgInput.value;
+    if(msg == "") return;
     msgInput.value = "";
-    document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-gray-600 text-white">'+msg+'</span></div></div>';
-    evaluate(msg);
+    document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-sky-300 text-white">'+msg+'</span></div></div>';
     neededmsgs++;
+
+    iterator = -1;
+    document.getElementById("botface").innerHTML = '<img class="mx-auto w-auto" id="botface" src="images/BOT-3.png" alt="Workflow"/>';
     
     if(neededmsgs == 10)
     {
@@ -320,15 +324,43 @@ const emotions_en = [
     }
 
   }
+
+  
+
   function botMsg(msg) {
-    document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center"><span class="flex p-2 rounded-lg bg-gray-600 text-white">'+msg+'</span></div></div>';
+    document.getElementById("chat").innerHTML += '<div class="flex"><div class="w-0 flex flex-1 items-center"><span class="flex p-2 rounded-lg bg-sky-500 text-white">'+msg+'</span></div></div>';
+   
   }
 
   function showResult(msg,val) {
     document.getElementById("chat").innerHTML += '<label for="'+ msg +'">'+msg+':  </label>';
-    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="10">'+val+'/10 </progress>';
+    document.getElementById("chat").innerHTML += '<progress id="'+msg+'" value="'+val+'" max="10">'+val+'/9 </progress>';
   }
   
   let aux = Math.floor(Math.random() * questionsNumber);
   usedQuestions[aux] = 1;
   botMsg(questions[aux]);
+
+  //Sprite bot
+  var intervalID = window.setInterval(myCallback, 1000);
+  var iterator=0;
+
+  function myCallback() {
+    if(iterator >= 0)
+    {
+      if(iterator%2 == 0)
+      {
+        document.getElementById("botface").innerHTML = '<img class="mx-auto w-auto" id="botface" src="images/BOT-1.png" alt="Workflow"/>';
+      }
+      else
+      {
+        document.getElementById("botface").innerHTML = '<img class="mx-auto w-auto" id="botface" src="images/BOT-2.png" alt="Workflow"/>';
+      }
+    }
+
+    iterator++;
+    if(iterator == 10)
+    {
+      iterator=0;
+    }
+  }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-50">
+<html lang="en" class="h-full bg-gray-200">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,22 +8,22 @@
     <link href="css/style.css" rel="stylesheet" />
   </head>
   <body class="h-full">
-    <div class="relative bg-white">
+    <div class="relative bg-teal-500">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div
-          class="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10"
+          class="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10 text-gray-50"
         >
           <div class="flex justify-start lg:w-0 lg:flex-1">
             <a href="#">
               <span class="sr-only">Workflow</span>
               <img
-                class="h-8 w-auto sm:h-10"
-                src="images/RAMEN-DEV.png"
+                class="h-8 w-auto sm:h-10 "
+                src="images/RAMEN-DEV-W.png"
                 alt=""
               />
             </a>
           </div>
-          Ramen Development_
+          <h1 class="text-white"> Ramen Development_</h1>
         </div>
       </div>
       <div
@@ -95,10 +95,16 @@
     >
       <div class="max-w-md w-full space-y-8">
         <div>
+          <div id="botface">
+            <img
+            class="mx-auto w-auto"
+            src="images/BOT-1.png"
+            alt="Workflow"/>
+          </div>
           <h2
             class="mt-6 text-center text-3xl tracking-tight font-bold text-gray-900"
           >
-            Chatea con Vibe Reader
+            ¡ Chatea con Vibe Reader !
           </h2>
 
           <h6
@@ -113,11 +119,12 @@
           <div id="chat">
             <div class="flex">
               <div class="w-0 flex flex-1 items-center">
-                <span class="flex p-2 rounded-lg bg-gray-600 text-white">
+                <span class="flex p-2 rounded-lg bg-sky-500 text-white">
                   <p class="text-white">
                     ¡Hola! Mucho gusto asombrosa persona. Soy Vibe Reader, un chat que puede sentirte.
-                  </p>
+                  </p> 
                 </span>
+                <br>
               </div>
             </div>
           </div>
@@ -141,7 +148,7 @@
               <button
                 id="sendbtn"
                 type="submit"
-                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-sky-300 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 onclick="userMsg();"
               >
                 <span class="inset-y-0 flex items-center pl-3">
@@ -168,12 +175,12 @@
       </div>
     </div>
     <!-- Footer -->
-    <div class="bg-accent-1 border-t border-accent-2">
+    <div class="bg-teal-500">
       <div class="container">
         <div class="py-28 flex flex-col lg:flex-row items-center">
-          <img src="images/RAMEN-DEV.png" class="h-8 w-auto" />
+          <!--<img src="images/RAMEN-DEV.png" class="h-8 w-auto"/> Hay que alinear a la derecha pa que se vea bonito--> 
           <h3
-            class="text-4xl lg:text-5xl font-bold tracking-tighter leading-tight text-center lg:text-left mb-10 lg:mb-0 lg:pr-4 lg:w-1/2"
+            class="text-4xl lg:text-5xl font-bold tracking-tighter leading-tight text-center lg:text-right mb-10 lg:mb-0 lg:pr-4 lg:w-1/2"
           >
             Ramen Development_
           </h3>
@@ -189,8 +196,8 @@
             </li>
           </ul>
         </div>
-        <hr />
-        <div class="flex flex-col text-gray-500 my-3 items-center">
+ 
+        <div class="flex flex-col text-white my-3 items-center">
           <p>© 2023 Ramen Development. All rights reserved.</p>
         </div>
       </div>
