@@ -23,8 +23,10 @@ function shuffleArray(array) {
   // Randomize the lines
   shuffleArray(lines);
 
-  // Process 200 lines to generate a "bag of words"
-  const numSamples = 200;
+  // Process 1000 lines to generate a "bag of words"
+  const numSamples = 1000;
+  //enough epochs to avoid overfitting
+  const epochs = 25;
   let bagOfWords = {};
   let sentences = lines.slice(0, numSamples).map((line) => {
     let sentence = line.split("\t")[0];
@@ -106,7 +108,7 @@ function shuffleArray(array) {
   const xs = tf.stack(vectors.map((x) => tf.tensor1d(x)));
   const ys = tf.stack(outputs.map((x) => tf.tensor1d(x)));
   await model.fit(xs, ys, {
-    epochs: 50,
+    epochs: epochs,
     shuffle: true,
     callbacks: {
       onEpochEnd: (epoch, logs) => {
@@ -114,6 +116,7 @@ function shuffleArray(array) {
       },
     },
   });
+  console.log("Training ended!");
 })();
 //END AI
 
@@ -127,7 +130,7 @@ app.use(express.json())
 const PRODUCTION = app.get("env") === "production";
 
 app.get("/", (req, res) => {
-  res.send("Hi!");
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 //Evaluation of message
@@ -155,11 +158,10 @@ app.post("/evaluate", async (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.status(404).send("Not Found");
+  res.sendFile(path.join(__dirname, 'public/404.html'));
 });
 
 
-// Listen and serve.
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`App started on PORT ${PORT}`);
