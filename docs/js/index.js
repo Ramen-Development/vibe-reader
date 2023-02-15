@@ -1,3 +1,7 @@
+//test env:
+// const apiurl = "http://localhost:3000/";
+//prod env:
+const apiurl = "https://vibe-readerapi.onrender.com/";
 const emotions_en = [
   "Admiration",
   "Amusement",
@@ -149,7 +153,7 @@ async function userMsg() {
     '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-sky-300 text-white">' +
     msg +
     "</span></div></div>";
-  const evaluation = await fetch("http://localhost:3000/evaluate", {
+  const evaluation = await fetch(apiurl+"evaluate", {
     method: "POST",
     body: JSON.stringify({ sentence: msg }),
     headers: { "Content-Type": "application/json" },
