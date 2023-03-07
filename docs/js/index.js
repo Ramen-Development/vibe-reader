@@ -10,6 +10,49 @@ const contextQuestions = [
   "¿Alguien influyó en lo que me comentas?",
 ];
 
+const respuestas ={
+  17: ["Me alegra que te sientas asi", 
+    "Que bueno que te sientas asi", 
+    "Muy bien"],
+  25: ["Noto tristeza", 
+    "Todo va a estar bien",
+    "No te preocupes, todo va a estar bien",
+    "No estas solo."],
+  27: ["Entiendo", "Okay"],
+  2: ["Es comprensible que te sientas asi", "Tranquilo, no pasa nada" ],
+  14: ["Veo que sientes miedo", "Estas seguro, tranquilo"]
+}
+
+const emotions_generalizer = [
+  17, //0
+  17,
+  2,
+  2,
+  17,
+  17,
+  6,
+  7,
+  17,
+  9,
+  10,
+  11,
+  12,
+  17,
+  14,
+  17,
+  16,
+  17,
+  17,
+  19,
+  17,
+  17,
+  17,
+  17,
+  24,
+  25,
+  26,
+  27,
+];
 
 
 const emotions_en = [
@@ -203,12 +246,10 @@ async function userMsg() {
     body: JSON.stringify({ sentence: msg }),
     headers: { "Content-Type": "application/json" },
   });
-  let id = await evaluation.json();
-  id = id.id;
-  emotionsResults[id] = emotionsResults[id] + 1;
+  let idEmotion = await evaluation.json();
+  idEmotion = idEmotion.id;
+  emotionsResults[idEmotion] = emotionsResults[idEmotion] + 1;
   neededmsgs++;
-
-  
 
   iterator = -1;
   document.getElementById("botface").innerHTML =
@@ -229,7 +270,6 @@ async function userMsg() {
 
     if (helpMsg) {
       showHelpMsg();
-
     }
 
     //Borrar boton
@@ -237,8 +277,8 @@ async function userMsg() {
     interaction.remove();
   } else {
     let iaux = 0;
-    
-    if(botReaction(emotions[id]) && !newQuestionNeeded){
+    console.log("botreacion: " + idEmotion);
+    if(botReaction(idEmotion) && !newQuestionNeeded){
       let aux = Math.floor(Math.random() * contextQuestions.length);
       botMsg(contextQuestions[aux]);
       newQuestionNeeded = true;
@@ -259,60 +299,15 @@ async function userMsg() {
 
 function botReaction(emotion){
   let rand = Math.floor(Math.random() * 3);
-  console.log(emotion);
+  console.log(emotions[emotion]);
+  genEmo = emotions_generalizer[emotion];
+  resps = respuestas[genEmo];
+  if(resps == null)
+    return false;
 
-  switch(emotion){
-
-    case "Alegría":
-      botMsg("Detecto "+emotion);
-      if(rand == 0){
-        botMsg("Me alegra que te sientas asi");
-      }else if(rand == 1){
-        botMsg("Que bueno que te sientas asi");
-      }else{
-        botMsg("Muy bien");
-      }
-      break;
-    case "Tristeza":
-      botMsg("Detecto "+emotion);
-      if(rand == 0){
-        botMsg("Todo va a estar bien");
-      }else if(rand == 1){
-        botMsg("No te preocupes, todo va a estar bien");
-      }else{
-        botMsg("No estas solo.");
-      }
-      break;
-    case "Neutral":
-      if(rand == 0){
-        botMsg("Entiendo");
-      }else{
-        botMsg("Okay");
-      }
-      return false;
-
-    case "Enojo": case "Molestia":
-      botMsg("Detecto "+emotion);
-      if(rand == 0){
-        botMsg("Es comprensible que te sientas asi");
-      }else{
-        botMsg("Tranquilo, no pasa nada");
-      }
-      break;
-    case "Miedo":
-      botMsg("Detecto "+emotion);
-      if(rand == 0){
-        botMsg("");
-      }else{
-        botMsg("Estas seguro, tranquilo");
-      }
-      break;
-    default:
-      return false;
-  }
+  rand = Math.floor(Math.random() * resps.length);
+  botMsg(resps[rand]);
   return true;
-
-
 }
 
 function showHelpMsg(){
