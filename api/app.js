@@ -38,7 +38,7 @@ const emotions = [
 const tf = require("@tensorflow/tfjs-node")
 let allWords = [];
 let wordReference = {};
-const model = tf.sequential();
+let model = tf.sequential();
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -50,7 +50,7 @@ function shuffleArray(array) {
 async function loadAndTrain(){
   allWords = [];
   wordReference = {};
-  model.resetStates();
+  model = tf.sequential();
 
   let data = fs.readFileSync( "data/emotions_es.tsv", "utf8");
   let extradata = fs.readFileSync( "data/extraemotions_es.tsv", "utf8");
@@ -221,10 +221,9 @@ app.post("/evaluate", async (req, res) => {
     messageList.push([sentence,id])
   }
 
-  if(acceptedMessages > 5)
+  if(acceptedMessages > 5){
     flushMessages();
-
-  loadAndTrain();
+  }
 
   res.send(JSON.stringify({id:id}));
 });
