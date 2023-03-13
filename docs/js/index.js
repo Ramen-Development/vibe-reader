@@ -262,7 +262,7 @@ async function userMsg() {
       if (emotionsResults[i] > 0) {
         
         showResult(emotions[i], emotionsResults[i].toString());
-        if (emotions[i] == "Tristeza" && emotionsResults[i] >= 2) {
+        if (emotions[i] == "Tristeza" && emotionsResults[i] >= 3) {
           helpMsg = true;
         }
       }
