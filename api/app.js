@@ -64,7 +64,7 @@ async function loadAndTrain(){
   // Process 1000 lines to generate a "bag of words"
   const numSamples = 1000;
   //enough epochs to avoid overfitting
-  const epochs = 25;
+  const epochs = 30;
   let bagOfWords = {};
   let sentences = lines.slice(0, numSamples).map((line) => {
     let sentence = line.split("\t")[0];
@@ -182,7 +182,8 @@ function flushMessages(){
   acceptedMessages=0;
   fs.appendFileSync("data/extraemotions_es.tsv", exportmsgs, { encoding: "utf8"})
   console.log("Newly added messages flushed to file");
-  loadAndTrain();
+  //Temporalmente desactivado:
+  // loadAndTrain();
 }
 
 app.get("/", (req, res) => {
@@ -208,7 +209,6 @@ app.post("/evaluate", async (req, res) => {
   });
 
   
-
   let prediction = await model.predict(tf.stack([tf.tensor1d(vector)])).data();
   
   // Get the index of the highest value in the prediction
@@ -216,7 +216,7 @@ app.post("/evaluate", async (req, res) => {
   let id = prediction.indexOf(highPred);
   console.log("Emocion: " + id + ", " + emotions[id] + " fue " + highPred);
 
-  if(highPred > 0.01){
+  if(highPred > 0.6){
     acceptedMessages += 1;
     messageList.push([sentence,id])
   }
