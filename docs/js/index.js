@@ -1,7 +1,7 @@
 //test env:
-const apiurl = "http://localhost:3000/";
+// const apiurl = "http://localhost:3000/";
 //prod env:
-//const apiurl = "https://vibe-readerapi.onrender.com/";
+const apiurl = "https://vibe-readerapi.onrender.com/";
 
 const contextQuestions = [
   "¿Por qué te sientes así?",
