@@ -3,11 +3,42 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 
+const emotions = [
+  "Admiracion",
+  "Asombro",
+  "Enojo",
+  "Molestia",
+  "Aprobacion",
+  "Cariño",
+  "Confusion",
+  "Curiosidad",
+  "Deseo",
+  "Decepcion",
+  "Desaprobacion",
+  "Disgusto",
+  "Pena",
+  "Emocion",
+  "Miedo",
+  "Gratitud",
+  "Duelo",
+  "Alegria",
+  "Amor",
+  "Nervios",
+  "Optimismo",
+  "Orgullo",
+  "Realizacion",
+  "Alivio",
+  "Remordimiento",
+  "Tristeza",
+  "Sorpresa",
+  "Neutral",
+];
+
 //AI TRAINING
 const tf = require("@tensorflow/tfjs-node")
 let allWords = [];
 let wordReference = {};
-const model = tf.sequential();
+let model = tf.sequential();
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -16,9 +47,16 @@ function shuffleArray(array) {
   }
 }
 
-(async () => {
+async function loadAndTrain(){
+  allWords = [];
+  wordReference = {};
+  model = tf.sequential();
+
   let data = fs.readFileSync( "data/emotions_es.tsv", "utf8");
+  let extradata = fs.readFileSync( "data/extraemotions_es.tsv", "utf8");
+  data+=extradata;
   let lines = data.split("\n").filter((x) => !!x); // Split & remove empty lines
+  
 
   // Randomize the lines
   shuffleArray(lines);
@@ -117,8 +155,10 @@ function shuffleArray(array) {
     },
   });
   console.log("Training ended!");
-})();
+};
 //END AI
+
+loadAndTrain();
 
 //API CALLS
 const cors = require('cors')
@@ -128,6 +168,22 @@ app.use(cors())
 app.use(express.json())
 // See: http://expressjs.com/en/4x/api.html#app.settings.table
 const PRODUCTION = app.get("env") === "production";
+
+let acceptedMessages = 0
+let messageList = []
+
+function flushMessages(){
+  console.log("flushing mesages");
+  exportmsgs = "";
+  for (var i = 0; i < messageList.length; i++){
+    exportmsgs += messageList[i][0] + "\t" +  messageList[i][1]+"\n"; 
+  }
+  messageList = [];
+  acceptedMessages=0;
+  fs.appendFileSync("data/extraemotions_es.tsv", exportmsgs, { encoding: "utf8"})
+  console.log("Newly added messages flushed to file");
+  loadAndTrain();
+}
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -151,9 +207,24 @@ app.post("/evaluate", async (req, res) => {
     }
   });
 
+  
+
   let prediction = await model.predict(tf.stack([tf.tensor1d(vector)])).data();
+  
   // Get the index of the highest value in the prediction
-  let id = prediction.indexOf(Math.max(...prediction));
+  highPred = Math.max(...prediction)
+  let id = prediction.indexOf(highPred);
+  console.log("Emocion: " + id + ", " + emotions[id] + " fue " + highPred);
+
+  if(highPred > 0.01){
+    acceptedMessages += 1;
+    messageList.push([sentence,id])
+  }
+
+  if(acceptedMessages > 5){
+    flushMessages();
+  }
+
   res.send(JSON.stringify({id:id}));
 });
 
