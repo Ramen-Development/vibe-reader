@@ -35,7 +35,7 @@ const emotions = [
 ];
 
 //AI TRAINING
-const tf = require("@tensorflow/tfjs-node")
+const tf = require("@tensorflow/tfjs-node");
 let allWords = [];
 let wordReference = {};
 let model = tf.sequential();
@@ -47,16 +47,15 @@ function shuffleArray(array) {
   }
 }
 
-async function loadAndTrain(){
+async function loadAndTrain() {
   allWords = [];
   wordReference = {};
   model = tf.sequential();
 
-  let data = fs.readFileSync( "data/emotions_es.tsv", "utf8");
-  let extradata = fs.readFileSync( "data/extraemotions_es.tsv", "utf8");
-  data+=extradata;
+  let data = fs.readFileSync("data/emotions_es.tsv", "utf8");
+  let extradata = fs.readFileSync("data/extraemotions_es.tsv", "utf8");
+  data += extradata;
   let lines = data.split("\n").filter((x) => !!x); // Split & remove empty lines
-  
 
   // Randomize the lines
   shuffleArray(lines);
@@ -155,39 +154,65 @@ async function loadAndTrain(){
     },
   });
   console.log("Training ended!");
-};
+}
 //END AI
 
 loadAndTrain();
 
 //API CALLS
-const cors = require('cors')
+const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
-app.use(cors())
-app.use(express.json())
+app.use(express.static('public'))
+app.use(cors());
+app.use(express.json());
 // See: http://expressjs.com/en/4x/api.html#app.settings.table
 const PRODUCTION = app.get("env") === "production";
 
-let acceptedMessages = 0
-let messageList = []
+let acceptedMessages = 0;
+let toApproveMsgs = 0;
+let messageList = [];
+let toApproveMsgsList = [];
 
-function flushMessages(){
+function flushMessages() {
   console.log("flushing mesages");
   exportmsgs = "";
-  for (var i = 0; i < messageList.length; i++){
-    exportmsgs += messageList[i][0] + "\t" +  messageList[i][1]+"\n"; 
+  for (var i = 0; i < messageList.length; i++) {
+    exportmsgs += messageList[i][0] + "\t" + messageList[i][1] + "\n";
   }
   messageList = [];
-  acceptedMessages=0;
-  fs.appendFileSync("data/extraemotions_es.tsv", exportmsgs, { encoding: "utf8"})
+  acceptedMessages = 0;
+  fs.appendFileSync("data/extraemotions_es.tsv", exportmsgs, {
+    encoding: "utf8",
+  });
   console.log("Newly added messages flushed to file");
   //Temporalmente desactivado:
   // loadAndTrain();
 }
 
+function addToApprove(){
+  console.log("Adding toApprove");
+
+  exportmsgs = "";
+  for (var i = 0; i < toApproveMsgsList.length; i++) {
+    exportmsgs += toApproveMsgsList[i][0] + "\t" + toApproveMsgsList[i][1] + "\n";
+  }
+  toApproveMsgsList = [];
+  toApproveMsgs = 0;
+  fs.appendFileSync("data/toApprove.tsv", exportmsgs, {
+    encoding: "utf8",
+  });
+  console.log("Pending messages flushed to file");
+}
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
+app.get("/toApprove", (req,res) => {
+  let data = fs.readFileSync("data/toApprove.tsv", "utf8");
+  let lines = data.split("\n").filter((x) => !!x); // Split & remove empty lines
+  res.send(JSON.stringify({ data: lines }));
 });
 
 //Evaluation of message
@@ -208,30 +233,34 @@ app.post("/evaluate", async (req, res) => {
     }
   });
 
-  
   let prediction = await model.predict(tf.stack([tf.tensor1d(vector)])).data();
-  
+
   // Get the index of the highest value in the prediction
-  highPred = Math.max(...prediction)
+  highPred = Math.max(...prediction);
   let id = prediction.indexOf(highPred);
   console.log("Emocion: " + id + ", " + emotions[id] + " fue " + highPred);
 
-  if(highPred > 0.6){
+  if (highPred > 0.6) {
     acceptedMessages += 1;
-    messageList.push([sentence,id])
+    messageList.push([sentence, id]);
+  } else {
+    toApproveMsgs += 1;
+    toApproveMsgsList.push([sentence, id]);
   }
 
-  if(acceptedMessages > 5){
+  if (acceptedMessages > 5) {
     flushMessages();
   }
+  if (toApproveMsgs > 5) {
+    addToApprove();
+  }
 
-  res.send(JSON.stringify({id:id}));
+  res.send(JSON.stringify({ id: id }));
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/404.html'));
+  res.sendFile(path.join(__dirname, "public/404.html"));
 });
-
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
