@@ -317,7 +317,7 @@ function showHelpMsg(emotion) {
       botMsg(
         "(Guadalajara) Sistema de Atención Psicológica 24/7:&nbsp <a href='tel:+523336691324'>33 3669 1324</a>"
       );
-      botMsg("Animo, Todo va a estar bien.");
+      botMsg("¡Te deseamos lo mejor!");
       break;
     //neutral
     default:
