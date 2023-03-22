@@ -1,7 +1,7 @@
 //test env:
-const apiurl = "http://localhost:3000/";
+// const apiurl = "http://localhost:3000/";
 //prod env:
-//const apiurl = "https://vibe-readerapi.onrender.com/";
+const apiurl = "https://vibe-readerapi.onrender.com/";
 
 const contextQuestions = [
   "¿Por qué te sientes así?",
@@ -317,7 +317,7 @@ function showHelpMsg(emotion) {
       botMsg(
         "(Guadalajara) Sistema de Atención Psicológica 24/7:&nbsp <a href='tel:+523336691324'>33 3669 1324</a>"
       );
-      botMsg("¡Te deseamos lo mejor!");
+      botMsg("No estás solo, ¡Te deseamos lo mejor!");
       break;
     //neutral
     default:

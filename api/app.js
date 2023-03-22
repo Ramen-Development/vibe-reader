@@ -163,7 +163,7 @@ loadAndTrain();
 const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
-app.use(express.static('public'))
+app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 // See: http://expressjs.com/en/4x/api.html#app.settings.table
@@ -190,12 +190,13 @@ function flushMessages() {
   // loadAndTrain();
 }
 
-function addToApprove(){
+function addToApprove() {
   console.log("Adding toApprove");
 
   exportmsgs = "";
   for (var i = 0; i < toApproveMsgsList.length; i++) {
-    exportmsgs += toApproveMsgsList[i][0] + "\t" + toApproveMsgsList[i][1] + "\n";
+    exportmsgs +=
+      toApproveMsgsList[i][0] + "\t" + toApproveMsgsList[i][1] + "\n";
   }
   toApproveMsgsList = [];
   toApproveMsgs = 0;
@@ -205,14 +206,58 @@ function addToApprove(){
   console.log("Pending messages flushed to file");
 }
 
+function approveSentence(sentence, emotion) {
+  acceptedMessages += 1;
+  messageList.push([sentence, emotion]);
+  if (acceptedMessages > 5) {
+    flushMessages();
+  }
+}
+
+function removeFromRevision(sentence) {
+  let data = fs.readFileSync("data/toApprove.tsv", "utf8");
+  let lines = data.split("\n").filter((x) => !!x); // Split & remove empty lines
+  for (let i = 0; i < lines.length; i++) {
+    let sen = lines[i].split("\t")[0];
+    if (sen == sentence) {
+      lines.splice(i, 1);
+      break;
+    }
+  }
+
+  exportmsgs = "";
+  for (var i = 0; i < lines.length; i++) {
+    exportmsgs += lines[i] + "\n";
+  }
+  fs.writeFileSync("data/toApprove.tsv", exportmsgs);
+}
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+  res.sendFile("index.html");
 });
 
-app.get("/toApprove", (req,res) => {
+app.get("/toApprove", (req, res) => {
+  res.sendFile("toApprove.html");
+});
+
+app.get("/toApproveData", (req, res) => {
   let data = fs.readFileSync("data/toApprove.tsv", "utf8");
   let lines = data.split("\n").filter((x) => !!x); // Split & remove empty lines
   res.send(JSON.stringify({ data: lines }));
+});
+
+app.post("/approveSentence", async (req, res) => {
+  const sentence = req.body.sentence;
+  const emotion = req.body.emotion;
+  approveSentence(sentence, emotion);
+  removeFromRevision(sentence);
+  res.send(JSON.stringify({ data: "200" }));
+});
+
+app.post("/removeSentence", async (req, res) => {
+  const sentence = req.body.sentence;
+  removeFromRevision(sentence);
+  res.send(JSON.stringify({ data: "200" }));
 });
 
 //Evaluation of message
@@ -241,15 +286,10 @@ app.post("/evaluate", async (req, res) => {
   console.log("Emocion: " + id + ", " + emotions[id] + " fue " + highPred);
 
   if (highPred > 0.6) {
-    acceptedMessages += 1;
-    messageList.push([sentence, id]);
+    approveSentence(sentence, id);
   } else {
     toApproveMsgs += 1;
     toApproveMsgsList.push([sentence, id]);
-  }
-
-  if (acceptedMessages > 5) {
-    flushMessages();
   }
   if (toApproveMsgs > 5) {
     addToApprove();
