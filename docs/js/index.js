@@ -10,18 +10,22 @@ const contextQuestions = [
   "¿Alguien influyó en lo que me comentas?",
 ];
 
-const respuestas ={
-  17: ["Me alegra que te sientas asi", 
-    "Que bueno que te sientas asi", 
-    "Muy bien"],
-  25: ["Noto tristeza", 
+const respuestas = {
+  17: [
+    "Me alegra que te sientas asi",
+    "Que bueno que te sientas asi",
+    "Muy bien",
+  ],
+  25: [
+    "Noto tristeza",
     "Todo va a estar bien",
     "No te preocupes, todo va a estar bien",
-    "No estas solo."],
+    "No estas solo.",
+  ],
   27: ["Entiendo", "Okay"],
-  2: ["Es comprensible que te sientas asi", "Tranquilo, no pasa nada" ],
-  14: ["Veo que sientes miedo", "Estas seguro, tranquilo"]
-}
+  2: ["Es comprensible que te sientas asi", "Tranquilo, no pasa nada"],
+  14: ["Veo que sientes miedo", "Estas seguro, tranquilo"],
+};
 
 const emotions_generalizer = [
   17, //0
@@ -53,7 +57,6 @@ const emotions_generalizer = [
   26,
   27,
 ];
-
 
 const emotions_en = [
   "Admiration",
@@ -121,19 +124,20 @@ const questions_en = [
   "How are you feeling ?",
   "What is bothering you the most at the moment?",
   "Has there been anything that has made you feel better lately?",
-  "Would you like to talk about what is bothering you or do you feel more comfortable keeping it to yourself?", "Have you talked to anyone else about how you are feeling?", "Have you talked to anyone else about how you are feeling?",
+  "Would you like to talk about what is bothering you or do you feel more comfortable keeping it to yourself?",
+  "Have you talked to anyone else about how you are feeling?",
+  "Have you talked to anyone else about how you are feeling?",
   "Have you talked to anyone else about how you are feeling?",
   "How do you spend your free time?",
   "Do you have any hobbies or interests that you are passionate about?",
   "Do you have any books, movies, or series that you would recommend?",
-  
-  "Do you have any dreams or goals you would like to achieve in the future?", "Do you have any dreams or goals you would like to achieve in the future?",
+  "Do you have any dreams or goals you would like to achieve in the future?",
+  "Do you have any dreams or goals you would like to achieve in the future?",
   "How would you describe your personality?",
   "What do you like most about yourself?",
   "What kind of food do you like to eat?",
   "How would you describe yourself in stressful situations?",
   "Is there anything that life has taught you that you always remember?",
-
   "What you do when you feel happy?",
   "What do you do when you are alone?",
   "What is your purpose in life?",
@@ -177,14 +181,12 @@ const questions = [
   "¿Cómo pasas tu tiempo libre?",
   "¿Tienes algún hobby o interés que te apasiona?",
   "¿Tienes algún libro, película o serie que recomendarías?",
-  
   "¿Tienes algún sueño o meta que te gustaría alcanzar en el futuro?",
   "¿Cómo describirías tu personalidad?",
   "¿Qué es lo que más te gusta de ti?",
   "¿Qué tipo de comida te gusta comer?",
   "¿Cómo te describirías en situaciones de estrés?",
   "¿Hay algo que te haya enseñado la vida que siempre recuerdas?",
-
   "¿Que haces cuando te sientes feliz?",
   "¿Que haces cuando estas solo?",
   "¿Cual es tu proposito en la vida?",
@@ -220,7 +222,6 @@ const questions = [
 
 const questionsNumber = questions.length;
 
-
 let emotionsResults = new Array(28).fill(0);
 
 let usedQuestions = new Array(questionsNumber).fill(0);
@@ -231,17 +232,17 @@ function setText(text) {
 
 let newQuestionNeeded = true;
 let neededmsgs = 0;
-let helpMsg = false;
 async function userMsg() {
   let msgInput = document.getElementById("message");
   let msg = msgInput.value;
   if (msg == "") return;
   msgInput.value = "";
+  document.getElementById("chat").innerHTML += "<br>";
   document.getElementById("chat").innerHTML +=
     '<div class="flex"><div class="w-0 flex flex-1 items-center justify-end"><span class="flex p-2 rounded-lg bg-sky-300 text-white">' +
     msg +
     "</span></div></div>";
-  const evaluation = await fetch(apiurl+"evaluate", {
+  const evaluation = await fetch(apiurl + "evaluate", {
     method: "POST",
     body: JSON.stringify({ sentence: msg }),
     headers: { "Content-Type": "application/json" },
@@ -256,34 +257,15 @@ async function userMsg() {
     '<img class="mx-auto w-auto" id="botface" src="images/BOT-3.png" alt="Workflow"/>';
 
   if (neededmsgs == 10) {
-    document.getElementById("chat").innerHTML += "<br>";
-    //Results
-    for (let i = 0; i < emotionsResults.length; i++) {
-      if (emotionsResults[i] > 0) {
-        
-        showResult(emotions[i], emotionsResults[i].toString());
-        if (emotions[i] == "Tristeza" && emotionsResults[i] >= 3) {
-          helpMsg = true;
-        }
-      }
-    }
-
-    if (helpMsg) {
-      showHelpMsg();
-    }
-
-    //Borrar boton
-    let interaction = document.getElementById("interact");
-    interaction.remove();
+    showResult();
   } else {
     let iaux = 0;
     console.log("botreacion: " + idEmotion);
-    if(botReaction(idEmotion) && !newQuestionNeeded){
+    if (botReaction(idEmotion) && !newQuestionNeeded) {
       let aux = Math.floor(Math.random() * contextQuestions.length);
       botMsg(contextQuestions[aux]);
       newQuestionNeeded = true;
-    }
-    else{
+    } else {
       while (iaux == 0) {
         let aux = Math.floor(Math.random() * questionsNumber);
         if (usedQuestions[aux] == 0) {
@@ -297,47 +279,99 @@ async function userMsg() {
   }
 }
 
-function botReaction(emotion){
+function botReaction(emotion) {
   let rand = Math.floor(Math.random() * 3);
   console.log(emotions[emotion]);
   genEmo = emotions_generalizer[emotion];
   resps = respuestas[genEmo];
-  if(resps == null)
-    return false;
+  if (resps == null) return false;
 
   rand = Math.floor(Math.random() * resps.length);
   botMsg(resps[rand]);
   return true;
 }
 
-function showHelpMsg(){
-  document.getElementById("chat").innerHTML += "<br>";
-
-  botMsg("Es probable que necesites ayuda en base a tus respuestas. Te recomendamos que busques una opinión profesional.");
-  botMsg("(México) Línea de la vida: 800 911 2000");
-  botMsg("(México) Instituto Nacional de Psiquiatría: 55 4160 3282");
-  botMsg("Animo, todo va a estar bien.");
-}      
-
+function showHelpMsg(emotion) {
+  let genEmo = emotions_generalizer[emotion];
+  switch (genEmo) {
+    //alegria
+    case 17:
+      botMsg("¡Parece ser que todo va bien por ahora!");
+      botMsg(
+        " la mayoría de las emociones detectadas fueron positivas, esperemos que todo continue así!"
+      );
+      break;
+    //enojo, miedo o tristeza
+    case 2:
+    case 14:
+    case 25:
+      botMsg(
+        "Es probable que necesites ayuda en base a tus respuestas. Te recomendamos que busques una opinión profesional."
+      );
+      botMsg(
+        "(México) Línea de la vida:&nbsp <a href='tel:+528009112000'>800 911 2000</a>"
+      );
+      botMsg(
+        "(México) Instituto Nacional de Psiquiatría:&nbsp <a href='tel:+525541603282'>55 4160 3282</a>"
+      );
+      botMsg(
+        "(Guadalajara) Sistema de Atención Psicológica 24/7:&nbsp <a href='tel:+523336691324'>33 3669 1324</a>"
+      );
+      botMsg("No estás solo, ¡Te deseamos lo mejor!");
+      break;
+    //neutral
+    default:
+      botMsg(
+        "Desafortunadamente, la mayoría de tus respuestas tuvieron pocas cosas que me permitieran identificar tus emociones"
+      );
+      botMsg(
+        "Te invito a que vuelvas a intentarlo, trata de ser mas descriptivo con tus respuestar para poder ayudarte adecuadamente."
+      );
+      break;
+  }
+  botMsg(
+    "Muchas gracias por utilizar este chat, espero te haya sido de ayuda para identificar lo que sientes"
+  );
+  botMsg("Por favor compartelo con quien creas que lo necesite.");
+  botMsg(
+    "Si notas algun error con tus resultados, espero que comprendas, ¡Estoy aprendiendo!"
+  );
+}
 
 function botMsg(msg) {
+  document.getElementById("chat").innerHTML += "<br>";
   document.getElementById("chat").innerHTML +=
     '<div class="flex"><div class="w-0 flex flex-1 items-center"><span class="flex p-2 rounded-lg bg-sky-500 text-white">' +
     msg +
     "</span></div></div>";
 }
 
-function showResult(msg, val) {
-  document.getElementById("chat").innerHTML +=
-    '<label for="' + msg + '">' + msg + ":  </label>";
-  document.getElementById("chat").innerHTML +=
-    '<progress id="' +
-    msg +
-    '" value="' +
-    val +
-    '" max="10">' +
-    val +
-    "/9 </progress> ";
+function showResult() {
+  document.getElementById("chat").innerHTML += "<br>";
+  //Results
+  for (let i = 0; i < emotionsResults.length; i++) {
+    if (emotionsResults[i] > 0) {
+      let msg = emotions[i];
+      let val = emotionsResults[i].toString();
+
+      document.getElementById("chat").innerHTML +=
+        '<label for="' + msg + '">' + msg + ":  </label>";
+      document.getElementById("chat").innerHTML +=
+        '<progress id="' +
+        msg +
+        '" value="' +
+        val +
+        '" max="10">' +
+        val +
+        "/9 </progress> ";
+    }
+  }
+  //gets the most repeated emotion identified and sends a message about it
+  let mostRepeated = emotionsResults.indexOf(Math.max(...emotionsResults));
+  showHelpMsg(mostRepeated);
+  //Borrar boton
+  let interaction = document.getElementById("interact");
+  interaction.remove();
 }
 
 let aux = Math.floor(Math.random() * questionsNumber);
