@@ -63,16 +63,15 @@
                 Inicia sesión
               </h2>
             </div>
-            <form class="mt-8 space-y-6" action="#" method="POST">
+            <form class="mt-8 space-y-6" action="" method="">
               <input type="hidden" name="remember" value="true" />
               <div class="-space-y-px rounded-md shadow-sm">
                 <div>
                   <label for="username" class="sr-only">Usuario</label>
                   <input
                     id="username"
-                    name="email"
-                    type="email"
-                    autocomplete="email"
+                    name="username"
+                    type="text"
                     required
                     class="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     placeholder="Usuario"
@@ -93,11 +92,21 @@
               </div>
 
               <script>
+                var logged = sessionStorage.getItem("logged");
+                if(typeof(logged)!=null && logged == "true")
+                {
+                  window.location.replace("../toApprove.html");
+                }
                 function login() {
                   let user = document.getElementById("username").value;
                   let pass = document.getElementById("password").value;
-                  if (user == "admin" && pass == "1234") {
+                  if (user == "vibeadmin" && pass == "vibem1n2023") {
+                    sessionStorage.setItem("logged",true);
                     window.location.replace("../toApprove.html");
+                  }
+                  else
+                  {
+                    window.alert("Usuario o contraseña incorrecta");
                   }
                 }
               </script>
