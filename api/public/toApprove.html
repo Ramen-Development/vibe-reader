@@ -14,15 +14,21 @@
           class="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10 text-gray-50"
         >
           <div class="flex justify-start lg:w-0 lg:flex-1">
-            <a href="#">
-              <span class="sr-only">Workflow</span>
-              <img
-                class="h-8 w-auto sm:h-10"
-                src="images/RAMEN-DEV-W.png"
-                alt=""
-              />
+            <a href="#" onclick="logout()">
+              Cerrar sesión
             </a>
           </div>
+          <script>
+            var logged = sessionStorage.getItem("logged");
+            if(typeof(logged)==null || logged == "false")
+            {
+              window.location.replace("../index.html");
+            }
+            function logout() {
+              sessionStorage.setItem("logged",false);
+              window.location.replace("../index.html");
+            }
+          </script>
           <h1 class="text-white">Ramen Development_</h1>
         </div>
       </div>
